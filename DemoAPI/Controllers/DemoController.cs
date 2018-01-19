@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DemoAPI.Models;
+using DemoAPI.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -19,6 +21,38 @@ namespace DemoAPI.Controllers
             var id = WindowsIdentity.GetCurrent();
 
             return id.Name;
+        }
+
+        [Route("api/BJS/{dateString}")]
+        [HttpGet]
+        public Model1 GetModel1(string dateString)
+        {
+            DateTime dateTime = new DateTime();
+
+            var reader = new Reader();
+            try
+            {
+                dateString = dateString.Trim();
+                if (!DateTime.TryParse(dateString, out dateTime))
+                {
+                    throw new Exception();
+                }
+                else if (DateTime.TryParse(dateString, out dateTime))
+                {
+                    return reader.GetStuff(dateTime);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error! Wrong date entered!");
+                Console.WriteLine(e.Message);
+                return null;
+            }
+
         }
     }
 }
